@@ -14,43 +14,64 @@
         <div class="shape shape-3"></div>
     </div>
     
-    <div class="container glass-panel">
-        <header>
-            <h1>User Validator</h1>
-            <p>Verify records against our database.</p>
-        </header>
+    <main class="page-shell">
+        <section class="container glass-panel">
+            <header>
+                <p class="eyebrow">3-Tier App</p>
+                <h1>User Records</h1>
+                <p>Add a person to the backend database and view the saved records instantly.</p>
+            </header>
 
-        <form id="checkForm">
-            <div class="input-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required placeholder="e.g. Alice" />
+            <form id="userForm">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required placeholder="e.g. Alice" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" required placeholder="e.g. 25" min="0" />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-btn">
+                    <span>Add User</span>
+                    <div class="loader hidden"></div>
+                </button>
+            </form>
+
+            <div id="feedback" class="result-card hidden"></div>
+        </section>
+
+        <section class="records-panel glass-panel">
+            <div class="records-header">
+                <div>
+                    <p class="eyebrow">Database View</p>
+                    <h2>Saved Users</h2>
+                </div>
+                <button id="refreshBtn" class="secondary-btn" type="button">Refresh</button>
             </div>
 
-            <div class="input-group">
-                <label for="age">Age</label>
-                <input type="number" id="age" name="age" required placeholder="e.g. 25" min="0" />
+            <div id="stats" class="stats-card">
+                <span class="stats-label">Total Records</span>
+                <strong id="recordCount">0</strong>
             </div>
 
-            <div class="input-group">
-                <label for="gender">Gender</label>
-                <select id="gender" name="gender" required>
-                    <option value="" disabled selected>Select Gender</option>
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <button type="submit" class="primary-btn">
-                <span>Check Database</span>
-                <div class="loader hidden"></div>
-            </button>
-        </form>
-
-        <div id="result" class="result-card hidden">
-            <!-- Result will be injected here -->
-        </div>
-    </div>
+            <div id="listState" class="list-state">Loading users...</div>
+            <div id="userList" class="user-list"></div>
+        </section>
+    </main>
 
     <script src="app.js"></script>
 </body>

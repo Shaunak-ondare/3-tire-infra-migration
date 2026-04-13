@@ -35,6 +35,38 @@ app.get('/api/users', (req, res) => {
     });
 });
 
+// Endpoint to add a new user
+app.post('/api/users', (req, res) => {
+    const { name, age, gender } = req.body;
+
+    if (!name || age === undefined || !gender) {
+        return res.status(400).json({ error: "Please provide name, age, and gender." });
+    }
+
+    const trimmedName = String(name).trim();
+    const parsedAge = parseInt(age, 10);
+    const trimmedGender = String(gender).trim();
+
+    if (!trimmedName || Number.isNaN(parsedAge) || parsedAge < 0 || !trimmedGender) {
+        return res.status(400).json({ error: "Please enter a valid name, age, and gender." });
+    }
+
+    db.run(
+        "INSERT INTO user (name, age, gender) VALUES (?, ?, ?)",
+        [trimmedName, parsedAge, trimmedGender],
+        function onInsert(err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            res.status(201).json({
+                message: "User added successfully.",
+                user: { name: trimmedName, age: parsedAge, gender: trimmedGender }
+            });
+        }
+    );
+});
+
 // Endpoint to check data
 app.post('/api/check', (req, res) => {
     const { name, age, gender } = req.body;
