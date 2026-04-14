@@ -5,6 +5,13 @@ variable "vpc_cidr" {
 
 }
 
+variable "vpc_id" {
+  description = "VPC ID for the security group"
+  type        = string
+  default     = "vpc-0ea45dc87e796e8ee"
+
+}
+
 variable "ec2_instance_id" {
   description = "Existing EC2 instance ID"
   type        = string
@@ -15,13 +22,6 @@ variable "ec2_ami_id" {
   description = "AMI ID for the EC2 instance"
   type        = string
   default     = "ami-05d2d839d4f73aafb"
-}
-
-variable "vpc_id" {
-  description = "VPC ID for the security group"
-  type        = string
-  default     = "vpc-0ea45dc87e796e8ee"
-
 }
 
 
