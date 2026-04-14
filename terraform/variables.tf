@@ -12,12 +12,6 @@ variable "vpc_id" {
 
 }
 
-variable "ec2_instance_id" {
-  description = "Existing EC2 instance ID"
-  type        = string
-  default     = "i-07c6d0232a8d3d645"
-}
-
 variable "ec2_ami_id" {
   description = "AMI ID for the EC2 instance"
   type        = string

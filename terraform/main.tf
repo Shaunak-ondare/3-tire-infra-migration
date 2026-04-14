@@ -37,7 +37,7 @@ resource "aws_instance" "app_server" {
 
 import {
   to = aws_instance.app_server
-  id = var.ec2_instance_id
+  id = "i-07c6d0232a8d3d645"
 }
 
 resource "aws_db_instance" "app_db" {
@@ -59,7 +59,7 @@ resource "aws_db_instance" "app_db" {
 
 import {
   to = aws_db_instance.app_db
-  id = var.rds_identifier
+  id = "three-tier-postgres"
 }
 
 resource "aws_security_group" "server_sg" {
