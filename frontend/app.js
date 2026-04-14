@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const apiBaseUrl = 'http://localhost:3000/api/users';
+    const apiBaseUrl = '/api/users';
     const form = document.getElementById('userForm');
     const submitButton = form.querySelector('button');
     const buttonText = submitButton.querySelector('span');
