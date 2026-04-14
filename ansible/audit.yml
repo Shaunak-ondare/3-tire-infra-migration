@@ -1,0 +1,90 @@
+---
+- name: Audit application server without changing it
+  hosts: app
+  gather_facts: true
+  become: false
+
+  tasks:
+    - name: Check Node.js version
+      ansible.builtin.command: node --version
+      register: node_version
+      changed_when: false
+      failed_when: false
+
+    - name: Check npm version
+      ansible.builtin.command: npm --version
+      register: npm_version
+      changed_when: false
+      failed_when: false
+
+    - name: Check PM2 version
+      ansible.builtin.command: pm2 --version
+      register: pm2_version
+      changed_when: false
+      failed_when: false
+
+    - name: Check PM2 process status
+      ansible.builtin.command: pm2 status
+      register: pm2_status
+      changed_when: false
+      failed_when: false
+
+    - name: Check nginx service status
+      ansible.builtin.command: systemctl status nginx --no-pager
+      register: nginx_status
+      changed_when: false
+      failed_when: false
+
+    - name: Check backend directory
+      ansible.builtin.command: ls -la {{ backend_root }}
+      register: backend_dir
+      changed_when: false
+      failed_when: false
+
+    - name: Check frontend directory
+      ansible.builtin.command: ls -la {{ frontend_root }}
+      register: frontend_dir
+      changed_when: false
+      failed_when: false
+
+    - name: Check backend env file
+      ansible.builtin.command: ls -l {{ backend_root }}/.env
+      register: backend_env
+      changed_when: false
+      failed_when: false
+
+    - name: Check nginx config file
+      ansible.builtin.command: ls -l /etc/nginx/sites-available/default
+      register: nginx_conf
+      changed_when: false
+      failed_when: false
+
+    - name: Check backend API directly
+      ansible.builtin.command: curl -s http://127.0.0.1:{{ backend_port }}/api/users
+      register: backend_api
+      changed_when: false
+      failed_when: false
+
+    - name: Check nginx proxy API
+      ansible.builtin.command: curl -s http://127.0.0.1/api/users
+      register: nginx_api
+      changed_when: false
+      failed_when: false
+
+    - name: Print audit summary
+      ansible.builtin.debug:
+        msg:
+          - "Node installed: {{ node_version.rc == 0 }}"
+          - "Node version: {{ node_version.stdout | default('missing') }}"
+          - "npm installed: {{ npm_version.rc == 0 }}"
+          - "npm version: {{ npm_version.stdout | default('missing') }}"
+          - "PM2 installed: {{ pm2_version.rc == 0 }}"
+          - "PM2 version: {{ pm2_version.stdout | default('missing') }}"
+          - "PM2 status available: {{ pm2_status.rc == 0 }}"
+          - "nginx running check passed: {{ nginx_status.rc == 0 }}"
+          - "backend directory exists: {{ backend_dir.rc == 0 }}"
+          - "frontend directory exists: {{ frontend_dir.rc == 0 }}"
+          - "backend .env exists: {{ backend_env.rc == 0 }}"
+          - "nginx config exists: {{ nginx_conf.rc == 0 }}"
+          - "backend API reachable: {{ backend_api.rc == 0 }}"
+          - "nginx API reachable: {{ nginx_api.rc == 0 }}"

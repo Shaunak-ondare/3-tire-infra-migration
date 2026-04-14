@@ -33,5 +33,5 @@ override.tf.json
 
 # Ansible
 *.retry
-infra/ansible/inventory/hosts.ini
-infra/ansible/group_vars/all/vault.yml
+ansible/inventory.ini
+ansible/group_vars/all/vault.yml

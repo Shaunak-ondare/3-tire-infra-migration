@@ -1,0 +1,22 @@
+app_root: /home/ubuntu/project-1
+backend_root: "{{ app_root }}/backend"
+frontend_root: "{{ app_root }}/frontend"
+web_root: /var/www/html
+
+nodejs_packages:
+  - nodejs
+  - npm
+
+system_packages:
+  - nginx
+  - ca-certificates
+  - curl
+
+pm2_process_name: backend
+backend_port: 3000
+
+db_host: your-rds-endpoint.amazonaws.com
+db_port: 5432
+db_user: app_user
+db_password: change-me
+db_name: three_tier_app

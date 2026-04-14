@@ -1,0 +1,92 @@
+---
+- name: Configure application server
+  hosts: app
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install system packages
+      ansible.builtin.apt:
+        name: "{{ system_packages }}"
+        state: present
+
+    - name: Create application root
+      ansible.builtin.file:
+        path: "{{ app_root }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: "0755"
+
+    - name: Copy backend source
+      ansible.builtin.copy:
+        src: ../backend/
+        dest: "{{ backend_root }}/"
+        owner: ubuntu
+        group: ubuntu
+        mode: preserve
+
+    - name: Copy frontend source
+      ansible.builtin.copy:
+        src: ../frontend/
+        dest: "{{ frontend_root }}/"
+        owner: ubuntu
+        group: ubuntu
+        mode: preserve
+
+    - name: Write backend environment file
+      ansible.builtin.template:
+        src: templates/backend.env.j2
+        dest: "{{ backend_root }}/.env"
+        owner: ubuntu
+        group: ubuntu
+        mode: "0600"
+
+    - name: Install backend dependencies
+      community.general.npm:
+        path: "{{ backend_root }}"
+
+    - name: Install PM2 globally
+      community.general.npm:
+        name: pm2
+        global: true
+
+    - name: Copy frontend to Nginx web root
+      ansible.builtin.copy:
+        src: ../frontend/
+        dest: "{{ web_root }}/"
+        owner: www-data
+        group: www-data
+        mode: preserve
+
+    - name: Write Nginx default site
+      ansible.builtin.template:
+        src: templates/nginx-default.conf.j2
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: "0644"
+      notify: restart nginx
+
+    - name: Ensure Nginx is enabled and running
+      ansible.builtin.service:
+        name: nginx
+        enabled: true
+        state: started
+
+    - name: Start backend with PM2
+      become: false
+      ansible.builtin.shell: |
+        pm2 describe {{ pm2_process_name }} >/dev/null 2>&1 || pm2 start npm --name {{ pm2_process_name }} -- start
+        pm2 save
+      args:
+        chdir: "{{ backend_root }}"
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
