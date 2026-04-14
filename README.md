@@ -360,3 +360,12 @@ Check:
 - `location /api/` exists in the Nginx config
 - `pm2 status` shows the backend is online
 
+## Infrastructure as Code Capture
+
+If you need to bring the existing EC2 and RDS setup under Terraform and Ansible without changing the live environment, use the files in [`infra/`](./infra/README.md).
+
+That workspace is intentionally set up for:
+
+- Terraform import and state inspection only
+- Ansible inventory and read-only audits only
+- no applies, no restarts, and no configuration drift on purpose
